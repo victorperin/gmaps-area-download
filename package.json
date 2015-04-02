@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/victorperin/gmaps-area-download/issues"
   },
-  "homepage": "https://github.com/victorperin/gmaps-area-download"
+  "homepage": "https://github.com/victorperin/gmaps-area-download",
+  "dependencies": {
+    "request": "^2.54.0"
+  }
 }

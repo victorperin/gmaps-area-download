@@ -1,0 +1,50 @@
+var request = require("request")
+var pesquisa = "amazonia brasil";
+var zoom= 13;
+var url = encodeURI("http://maps.google.com/maps/api/geocode/json?address="+pesquisa+"&sensor=false");
+
+request({
+    url: url,
+    json: true
+}, function (error, response, body) {
+
+    if (!error && response.statusCode === 200) {
+        var bounds = body.results[0].geometry.bounds;
+		
+		var northeast = bounds.northeast;
+		var southwest = bounds.southwest;
+		//console.log(northeast.lat);
+		//console.log(southwest.lat);
+		
+		//var location = body.results[0].geometry.location; //deletar
+		
+		var nowLat=northeast.lat,nowLng=northeast.lng;
+		//getImage(location.lat,location.lng);
+		//getImage(location.lat,location.lng+getZoomDifference(zoom));
+		
+		//console.log(northeast.lng+" "+northeast.lat);
+		//console.log(southwest.lng+" "+southwest.lat);
+		while(nowLat>=southwest.lat){
+			while(nowLng>=southwest.lng){
+				getImage(nowLat,nowLng);
+				nowLng-=getZoomDifference(zoom);
+			}
+			nowLat-=getZoomDifference(zoom);
+		}
+		
+    }
+})
+
+
+function getImage(lat,lng){
+	var urlImage = encodeURI("http://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lng+"&size=640x640&maptype=satellite&zoom="+zoom+"&scale=2");
+	console.log(urlImage);
+}
+
+function getZoomDifference(zoom){
+	var distance = 360;
+	for(x=1;x<zoom;x++){
+		distance = distance/2;
+	}
+	return distance;
+}
