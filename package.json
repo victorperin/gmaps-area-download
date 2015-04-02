@@ -1,0 +1,19 @@
+{
+  "name": "gmaps-area-download",
+  "version": "0.0.0",
+  "description": "Download lots of sattelite images from google maps api of a determined area.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/victorperin/gmaps-area-download.git"
+  },
+  "author": "Victor Perin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/victorperin/gmaps-area-download/issues"
+  },
+  "homepage": "https://github.com/victorperin/gmaps-area-download"
+}
