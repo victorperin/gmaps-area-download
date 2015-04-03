@@ -9,6 +9,15 @@ var pastaDownload = "imagens/";
 var quantidadeImpressa=0;
 var url = encodeURI("http://maps.google.com/maps/api/geocode/json?address="+pesquisa+"&sensor=false");
 
+if (!fs.existsSync(pastaDownload)) {
+	if(fs.mkdirSync(pastaDownload)){
+		console.log("Pasta criada.");
+	}
+}
+
+
+
+
 request({
     url: url,
     json: true
