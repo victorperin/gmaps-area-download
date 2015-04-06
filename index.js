@@ -1,7 +1,7 @@
-var 
+var
 	fs = require('fs'),
     request = require('request');
-	
+
 var pesquisa = "amazonia brasil";
 var zoom= 13;
 var limiteApi=10;
@@ -22,21 +22,16 @@ request({
     url: url,
     json: true
 }, function (error, response, body) {
-
     if (!error && response.statusCode === 200) {
         var bounds = body.results[0].geometry.bounds;
-		
 		var northeast = bounds.northeast;
 		var southwest = bounds.southwest;
 		//console.log(northeast.lat);
 		//console.log(southwest.lat);
-		
 		//var location = body.results[0].geometry.location; //deletar
-		
 		var nowLat=northeast.lat,nowLng=northeast.lng;
 		//getImage(location.lat,location.lng);
 		//getImage(location.lat,location.lng+getZoomDifference(zoom));
-		
 		//console.log(northeast.lng+" "+northeast.lat);
 		//console.log(southwest.lng+" "+southwest.lat);
 		while(nowLat>=southwest.lat){
@@ -48,7 +43,6 @@ request({
 			nowLat-=getZoomDifference(zoom);
 		}
 		console.log("Quantidade de imagens baixadas = "+quantidadeImpressa);
-		
     }
 })
 
@@ -56,15 +50,9 @@ request({
 function getImage(lat,lng){
 	var urlImage = encodeURI("http://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lng+"&size=640x640&maptype=satellite&zoom="+zoom+"&format=jpg");
 	console.log(urlImage);
-	
 	quantidadeImpressa++;
 	nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
 	download(urlImage,nomeArquivo);
-	
-	
-	
-	
-	
 }
 
 function getZoomDifference(zoom){
@@ -75,14 +63,13 @@ function getZoomDifference(zoom){
 	return distance;
 }
 
-
-
-
 download = function(uri, filename){
   request.head(uri, function(err, res, body){
 
     request(uri).pipe(fs.createWriteStream(filename)).on('close',
-		function(){console.log(filename+" OK!");}
-	);
+			function(){console.log(filename+" OK!");}
+		);
+
   });
+
 };
