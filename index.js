@@ -37,7 +37,21 @@ request({
 		while(nowLat>=southwest.lat){
 			nowLng=northeast.lng;
 			while(nowLng>=southwest.lng&&quantidadeImpressa<limiteApi){
-				getImage(nowLat,nowLng);
+
+				quantidadeImpressa++;
+				nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
+				fs.stat(nomeArquivo, function(err, stat) {
+				    if(err == null) {
+				        console.log('File '+nomeArquivo+' already exists!');
+				    } else if(err.code == 'ENOENT') {
+							getImage(nowLat,nowLng,nomeArquivo);
+				    } else {
+				        console.log('Something is wrong: ', err.code);
+				    }
+				});
+
+
+
 				nowLng-=getZoomDifference(zoom);
 			}
 			nowLat-=getZoomDifference(zoom);
@@ -47,11 +61,9 @@ request({
 })
 
 
-function getImage(lat,lng){
+function getImage(lat,lng,nomeArquivo){
 	var urlImage = encodeURI("http://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lng+"&size=640x640&maptype=satellite&zoom="+zoom+"&format=jpg");
 	console.log(urlImage);
-	quantidadeImpressa++;
-	nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
 	download(urlImage,nomeArquivo);
 }
 
