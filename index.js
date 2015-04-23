@@ -26,14 +26,7 @@ request({
         var bounds = body.results[0].geometry.bounds;
 		var northeast = bounds.northeast;
 		var southwest = bounds.southwest;
-		//console.log(northeast.lat);
-		//console.log(southwest.lat);
-		//var location = body.results[0].geometry.location; //deletar
 		var nowLat=northeast.lat,nowLng=northeast.lng;
-		//getImage(location.lat,location.lng);
-		//getImage(location.lat,location.lng+getZoomDifference(zoom));
-		//console.log(northeast.lng+" "+northeast.lat);
-		//console.log(southwest.lng+" "+southwest.lat);
 		while(nowLat>=southwest.lat){
 			nowLng=northeast.lng;
 			while(nowLng>=southwest.lng&&quantidadeImpressa<limiteApi){
