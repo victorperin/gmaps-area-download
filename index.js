@@ -45,22 +45,23 @@ request({
 
 
 
-				nowLng-=getZoomDifference(zoom);
+				nowLng-=getDistance(zoom);
 			}
-			nowLat-=getZoomDifference(zoom);
+			nowLat-=getDistance(zoom);
 		}
 		console.log("Quantidade de imagens baixadas = "+quantidadeImpressa);
     }
 })
 
-
+//função para gerar a URL da imagem e enviar para a função de download
 function getImage(lat,lng,nomeArquivo){
 	var urlImage = encodeURI("http://maps.googleapis.com/maps/api/staticmap?center="+lat+","+lng+"&size=640x640&maptype=satellite&zoom="+zoom+"&format=jpg");
 	console.log(urlImage);
 	download(urlImage,nomeArquivo);
 }
 
-function getZoomDifference(zoom){
+//função que retorna a distancia (em lat e long entre as imagens)
+function getDistance(zoom){
 	var distance = 360;
 	for(x=1;x<zoom;x++){
 		distance = distance/2;
