@@ -2,19 +2,21 @@ var
 	fs = require('fs'),
     request = require('request');
 
-var pesquisa = "amazonia brasil";
-var zoom= 13;
-var limiteApi=10;
-var pastaDownload = "imagens/";
-var quantidadeImpressa=0;
-var url = encodeURI("http://maps.google.com/maps/api/geocode/json?address="+pesquisa+"&sensor=false");
+var pesquisa = "campinas"; //variável da pesquisa, mude isso para escolher onde cada coisa vai ser baixada
+var zoom= 13; //nível de zoom da API, onde o nível 1 mostra a terra toda, o nivel 2 mostra a metade e assim recursivamente
+var limiteApi=10; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
+var pastaDownload = "imagens/"; //pasta onde as imagens serão baixadas
 
+
+
+var quantidadeImpressa;
+var url = encodeURI("http://maps.google.com/maps/api/geocode/json?address="+pesquisa+"&sensor=false");
 if (!fs.existsSync(pastaDownload)) {
 	if(fs.mkdirSync(pastaDownload)){
-		console.log("Pasta criada.");
+		console.log("Pasta de imagens criada.");
 	}
 }
-
+quantidadeImpressa = 0;
 
 
 
