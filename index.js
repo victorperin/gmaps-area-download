@@ -25,33 +25,32 @@ request({
     json: true
 }, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-        var bounds = body.results[0].geometry.bounds;
-		var northeast = bounds.northeast;
-		var southwest = bounds.southwest;
-		var nowLat=northeast.lat,nowLng=northeast.lng;
-		while(nowLat>=southwest.lat){
-			nowLng=northeast.lng;
-			while(nowLng>=southwest.lng&&quantidadeImpressa<limiteApi){
+			var northeast = body.results[0].geometry.bounds.northeast;
+      var southwest = body.results[0].geometry.bounds.southwest;
+			var nowLat=northeast.lat,nowLng=northeast.lng;
+			while(nowLat>=southwest.lat){
+				nowLng=northeast.lng;
+				while(nowLng>=southwest.lng&&quantidadeImpressa<limiteApi){
 
-				quantidadeImpressa++;
-				nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
-				fs.stat(nomeArquivo, function(err, stat) {
-				    if(err == null) {
-				        console.log('File '+nomeArquivo+' already exists!');
-				    } else if(err.code == 'ENOENT') {
-							getImage(nowLat,nowLng,nomeArquivo);
-				    } else {
-				        console.log('Something is wrong: ', err.code);
-				    }
-				});
-
+					quantidadeImpressa++;
+					nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
+					fs.stat(nomeArquivo, function(err, stat) {
+					    if(err == null) {
+					        console.log('File '+nomeArquivo+' already exists!');
+					    } else if(err.code == 'ENOENT') {
+								getImage(nowLat,nowLng,nomeArquivo);
+					    } else {
+					        console.log('Something is wrong: ', err.code);
+					    }
+					});
 
 
-				nowLng-=getDistance(zoom);
+
+					nowLng-=getDistance(zoom);
+				}
+				nowLat-=getDistance(zoom);
 			}
-			nowLat-=getDistance(zoom);
-		}
-		console.log("Quantidade de imagens baixadas = "+quantidadeImpressa);
+			console.log("Quantidade de imagens baixadas = "+quantidadeImpressa);
     }
 })
 
