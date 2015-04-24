@@ -3,8 +3,8 @@ var
     request = require('request');
 
 var pesquisa = "campinas"; //variável da pesquisa, mude isso para escolher onde cada coisa vai ser baixada
-var zoom= 13; //nível de zoom da API, onde o nível 1 mostra a terra toda, o nivel 2 mostra a metade e assim recursivamente
-var limiteApi=10; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
+var zoom= 18; //nível de zoom da API, onde o nível 1 mostra a terra toda, o nivel 2 mostra a metade e assim recursivamente
+var limiteApi=10000; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
 var pastaDownload = "imagens/"; //pasta onde as imagens serão baixadas
 
 
@@ -34,15 +34,11 @@ request({
 
 					quantidadeImpressa++;
 					nomeArquivo = pastaDownload+quantidadeImpressa+'.jpg';
-					fs.stat(nomeArquivo, function(err, stat) {
-					    if(err == null) {
-					        console.log('File '+nomeArquivo+' already exists!');
-					    } else if(err.code == 'ENOENT') {
-								getImage(nowLat,nowLng,nomeArquivo);
-					    } else {
-					        console.log('Something is wrong: ', err.code);
-					    }
-					});
+					if (!fs.existsSync(nomeArquivo)) {
+						getImage(nowLat,nowLng,nomeArquivo);
+					}else{
+						console.log('File '+nomeArquivo+' already exists!');
+					}
 
 
 
