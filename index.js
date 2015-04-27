@@ -4,7 +4,7 @@ var
 
 var pesquisa = "campinas"; //variável da pesquisa, mude isso para escolher onde cada coisa vai ser baixada
 var zoom= 18; //nível de zoom da API, onde o nível 1 mostra a terra toda, o nivel 2 mostra a metade e assim recursivamente
-var limiteApi=10000; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
+var limiteApi=1500; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
 var pastaDownload = "imagens/"; //pasta onde as imagens serão baixadas
 
 
@@ -38,6 +38,12 @@ request({
 						getImage(nowLat,nowLng,nomeArquivo);
 					}else{
 						console.log('File '+nomeArquivo+' already exists!');
+						var stats = fs.statSync(nomeArquivo);
+						var fileSizeInBytes = stats["size"];
+						if(fileSizeInBytes<10500){
+							console.log('Removing file: '+nomeArquivo);
+							fs.unlinkSync(nomeArquivo);
+						}
 					}
 
 
@@ -68,7 +74,7 @@ function getDistance(zoom){
 
 download = function(uri, filename){
   request.head(uri, function(err, res, body){
-
+		console.log(err);
     request(uri).pipe(fs.createWriteStream(filename)).on('close',
 			function(){console.log(filename+" OK!");}
 		);
