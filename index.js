@@ -4,12 +4,13 @@ var
 
 var pesquisa = "campinas"; //variável da pesquisa, mude isso para escolher onde cada coisa vai ser baixada
 var zoom= 18; //nível de zoom da API, onde o nível 1 mostra a terra toda, o nivel 2 mostra a metade e assim recursivamente
-var limiteApi=2200; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
+var limiteApi=10000; //limite de imagens que podem ser baixadas na API do google (o padrão é 10000, mas você pode querer apenas algumas)
+var limiteSimultaneo = 1; //limite de imagens a serem baixadas ao mesmo tempo
 var pastaDownload = "imagens/"; //pasta onde as imagens serão baixadas
+var tempo = 5000; //tempo de espera
 
 
-
-var quantidadeImpressa;
+var quantidadeImpressa,downloadsAtivos=0;
 var url = encodeURI("http://maps.google.com/maps/api/geocode/json?address="+pesquisa+"&sensor=false");
 if (!fs.existsSync(pastaDownload)) {
 	if(fs.mkdirSync(pastaDownload)){
@@ -42,7 +43,6 @@ request({
 					}
 
 
-
 					nowLng-=getDistance(zoom);
 				}
 				nowLat-=getDistance(zoom);
@@ -68,20 +68,35 @@ function getDistance(zoom){
 }
 
 download = function(uri, filename){
-  request.head(uri, function(err, res, body){
-    request(uri).pipe(fs.createWriteStream(filename)).on('close',
-			function(){
-				console.log(filename+" OK!");
-				fileState = checkFile(filename);
-				if(fileState || !fs.existsSync(filename)){
-					download(uri, filename);
-				}
-			}
-		);
+		if(downloadsAtivos<limiteSimultaneo){
+			downloadsAtivos++;
+		  request.head(uri, function(err, res, body){
+				downloadsAtivos--;
+			    request(uri).pipe(fs.createWriteStream(filename)).on('close',
+						function(){
 
-  });
+							console.log(filename+" OK!");
+							fileState = checkFile(filename);
 
+							if(fileState || !fs.existsSync(filename)){
+								tempo+=1000;
+								download(uri, filename);
+							}else{
+								tempo-=100;
+							}
+
+						}
+					);
+
+
+		  });
+		}else{
+			setTimeout(function() {
+    		download(uri,filename);
+			}, tempo);
+		}
 }
+
 
 function checkFile(nomeArquivo){
 	var stats = fs.statSync(nomeArquivo);
